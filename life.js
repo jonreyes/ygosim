@@ -5,19 +5,36 @@ function Life(){
     this.width;
     this.color = 'rgb(255,255,255)';
     this.meter = new LifeBar();
-    this.draw = (x,y) => {
-        this.x = x;
-        this.y = y;
+    this.selected = false;
+    this.drawText = (x,y) => {
         ctx.fillStyle = this.color;
         ctx.font = "30px Verdana";
         this.width = ctx.measureText(this.points).width;
-        ctx.fillText(this.points,this.x-this.width,this.y);          
+        this.x = x;
+        this.y = y;
+        ctx.fillText(this.points,this.x-this.width-10,this.y);          
+    }
+    this.select = () => {
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'rgb(255,255,255)';
+        ctx.strokeRect(this.meter.x,this.meter.y,this.meter.width,this.meter.height);
+    }
+    this.draw = () => {
+        if(this.selected == false){
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'rgb(255,0,0)';
+            ctx.strokeRect(this.meter.x,this.meter.y,this.meter.width,this.meter.height);
+        }
+        this.meter.draw(this.meter.x,this.meter.y);
+        this.drawText(this.x,this.y);
+        if(this.selected == true){
+            this.select();
+        }
     }
     this.update = (mod) => {
         this.points += mod;
-        console.log(this.points);
-        ctx.fillStyle = 'rgb(255,0,0)';
-        ctx.fillRect(this.x-this.width,this.y-3*scale/4,this.width,scale);
-        this.draw(this.x,this.y);
+        //console.log(this.points);
+        this.draw();
     }
+    
 }
