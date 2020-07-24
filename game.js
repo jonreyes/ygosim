@@ -71,6 +71,7 @@ canvas.addEventListener("click",event => {
     if(selected_zone!=null){
     if(event.x >= selected_zone.x && event.x <=selected_zone.x+selected_zone.width && event.y >= selected_zone.y && event.y <=selected_zone.y+selected_zone.height){
     } else {
+        // HighLight New Zone
         ctx.fillStyle = 'rgb(0,0,0)';
         ctx.fillRect(selected_zone.x-5,selected_zone.y-5,zone.width+10,zone.height+10)
         ctx.lineWidth = 1;
@@ -82,44 +83,44 @@ canvas.addEventListener("click",event => {
     }
     zones.forEach((zone)=>{
         if(event.x >= zone.x && event.x <=zone.x+zone.width && event.y >= zone.y && event.y <=zone.y+zone.height){
-                if(zone_selected==false){
-                    zone_selected = true;
-                    selected_zone = zone;
-                    // HighLight Selected
-                    selected_zone_highlight.update(zone.x,zone.y);
-                    selected_zone_highlight.draw();
-                    // Update View
-                    if(zone.card.data!=null){
-                        selected_view = new Card(false);
-                        selected_view.resize(2);
-                        selected_view.update(zone.card.data);
-                        // Show Placement
-                        place.innerText = "Remove";
-                        place.style.display = "block";
-                        place.style.position = "absolute";
-                        place.style.top = selected_view.height;
-                        place.style.width = selected_view.width;
-                        place.style.height = scale;
-                        // Remove Card from Zone
-                        place.onclick = () => {
-                            place.style.display = "none";
-                            selected_zone.reset();
-                            ctx.fillStyle = 'rgb(0,0,0)';
-                            ctx.fillRect(selected_zone.x-5,selected_zone.y-5,zone.width+10,zone.height+10)
-                            ctx.lineWidth = 1;
-                            ctx.strokeStyle = 'rgb(255,255,255)';
-                            ctx.strokeRect(selected_zone.x,selected_zone.y,zone.width,zone.height);
-                        }
-                    }
-                } else {
-                    ctx.fillStyle = 'rgb(0,0,0)';
-                    ctx.fillRect(selected_zone.x-5,selected_zone.y-5,zone.width+10,zone.height+10)
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = 'rgb(255,255,255)';
-                    ctx.strokeRect(selected_zone.x,selected_zone.y,zone.width,zone.height);
-                    zone_selected = false;
+                if(zone_selected){
+                    zone_selected = false
                     selected_zone = null;
+                    ctx.fillStyle = 'rgb(0,0,0)';
+                        ctx.fillRect(selected_zone.x-5,selected_zone.y-5,zone.width+10,zone.height+10)
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = 'rgb(255,255,255)';
+                        ctx.strokeRect(selected_zone.x,selected_zone.y,zone.width,zone.height);
                 }
+                zone_selected = true;
+                selected_zone = zone;
+                // HighLight Selected
+                selected_zone_highlight.update(zone.x,zone.y);
+                selected_zone_highlight.draw();
+                // Update View
+                if(zone.card.data!=null){
+                    selected_view = new Card(false);
+                    selected_view.resize(2);
+                    selected_view.update(zone.card.data);
+                    // Show Placement
+                    place.innerText = "Remove";
+                    if(place.style.display == "none"){
+                        place.style.display = "block";
+                    }
+                    place.style.position = "absolute";
+                    place.style.top = selected_view.height;
+                    place.style.width = selected_view.width;
+                    place.style.height = scale;
+                    // Remove Card from Zone
+                    place.onclick = () => {
+                        place.style.display = "none";
+                        selected_zone.reset();
+                        ctx.fillStyle = 'rgb(0,0,0)';
+                        ctx.fillRect(selected_zone.x-5,selected_zone.y-5,zone.width+10,zone.height+10)
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = 'rgb(255,255,255)';
+                        ctx.strokeRect(selected_zone.x,selected_zone.y,zone.width,zone.height);                        }
+                    }
         }
     });
     cards.forEach((card)=>{
@@ -174,6 +175,7 @@ canvas.addEventListener("click",event => {
                 place.style.width = selected_view.width;
                 place.style.height = scale;
                 place.onclick = () => {
+                    place.style.display = "none";
                     selected_zone.card.update(selected_card.data);
                 }
                 }
